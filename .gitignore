@@ -23,5 +23,4 @@ Homestead.json
 .phpunit.result.cache
 
 #вспомогательные папки
-!for_change_files/
-!myfiles_asd/
+!temp/

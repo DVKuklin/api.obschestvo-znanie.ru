@@ -96,9 +96,9 @@ class AdminApiController extends Controller
         return $data;
     }
 
-    public function setPermition(Request $r) {
+    public function setPermition(Request $request) {
 
-        $res = User::where('id',$r->current_user)->select('allowed_themes')->first();
+        $res = User::where('id',$request->current_user)->select('allowed_themes')->first();
 
         if (!$res) {
             return [
@@ -111,8 +111,8 @@ class AdminApiController extends Controller
         
         if (gettype($permitions)=='array') {
             for ($i=0;$i<count($permitions);$i++) {
-                if ($permitions[$i]->id == $r->theme_id) {
-                    $permitions[$i]->allowed = $r->permition;
+                if ($permitions[$i]->id == $request->theme_id) {
+                    $permitions[$i]->allowed = $request->permition;
                     $isDone = true;
                     break;
                 }
@@ -120,22 +120,22 @@ class AdminApiController extends Controller
     
             if (!$isDone) {
                 array_push($permitions,[
-                    "id"=>$r->theme_id,
-                    "allowed"=>$r->permition
+                    "id"=>$request->theme_id,
+                    "allowed"=>$request->permition
                 ]);
             }            
         } else {
             $permitions = [
                 [
-                    "id"=>$r->theme_id,
-                    "allowed"=>$r->permition
+                    "id"=>$request->theme_id,
+                    "allowed"=>$request->permition
                 ]
             ];
         }
 
         $jsonData = json_encode($permitions);
 
-        $res = User::where('id',$r->current_user)->update(['allowed_themes'=>$jsonData]);
+        $res = User::where('id',$request->current_user)->update(['allowed_themes'=>$jsonData]);
 
         if ($res) {
             $status = 'success';
@@ -154,7 +154,68 @@ class AdminApiController extends Controller
     }
 
     public function setPermitions(Request $request) {
-        return $request->all();
+        
+        $res = User::where('id',$request->current_user)->select('allowed_themes')->first();
+
+        if (!$res) {
+            return [
+                'status'=>'error',
+                'message'=>'Something went wrong.'
+            ];
+        }
+
+        $permitions = json_decode($res->allowed_themes);
+
+        $themes = $request->themes;
+
+        for ($j=0;$j<count($themes);$j++) {
+
+            $isDone = false;//Установили разрешение или нет
+        
+            if (gettype($permitions)=='array') {
+                for ($i=0;$i<count($permitions);$i++) {
+                    if ($permitions[$i]->id == $themes[$j]) {
+                        $permitions[$i]->allowed = $request->permition;
+                        $isDone = true;
+                        break;
+                    }
+                }
+        
+                if (!$isDone) {
+                    array_push($permitions,[
+                        "id"=>$themes[$j],
+                        "allowed"=>$request->permition
+                    ]);
+                }            
+            } else {
+                $permitions = [
+                    [
+                        "id"=>$themes[$j],
+                        "allowed"=>$request->permition
+                    ]
+                ];
+            }    
+        }
+
+        $jsonData = json_encode($permitions);
+
+        $res = User::where('id',$request->current_user)->update(['allowed_themes'=>$jsonData]);
+
+        if ($res) {
+            $status = 'success';
+            $message = 'That is ok';
+        } else {
+            $status = 'error';
+            $message = 'Somethink went wrong';  
+        }
+
+        $data = [
+            'status'=>$status,
+            'message'=>$message
+        ];
+
+        return $data;
+
     }
 
     public function getDataForParagraphsEdit(Request $r) {

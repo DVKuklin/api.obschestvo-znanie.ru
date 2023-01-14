@@ -88,6 +88,7 @@
 
     let current_user = localStorage.getItem('current_user');
     let current_section = localStorage.getItem('current_section');
+    let themes_on_page = [];
 
     dataBoot();
 
@@ -107,6 +108,9 @@
               if(data.status === "success"){
                 localStorage.setItem('current_user',data.current_user);
                 localStorage.setItem('current_section',data.current_section);
+                for (let i=0;i<data.themes.length;i++) {
+                  themes_on_page[i] = data.themes[i].theme_id;
+                }
 
                   //Заполняем select пользователи
                   let s = '';
@@ -143,7 +147,31 @@
                   inputSections.onchange = setCurrentSection;
 
                   //Заполняем таблицу
-                  s ='';
+                  let permitions = '';
+
+                  for (let i=0;i<data.themes.length;i++) {
+                    if (data.themes[i].permition == 'true') {
+                      permitions = 'checked';
+                    } else {
+                      permitions = '';
+                      break;
+                    }
+                  }
+
+                  s = ` <tr>
+                          <td colspan="2"></td>
+                          <td class="text-center">
+                            <div class="custom-control custom-switch">
+                              <input type="checkbox" 
+                                          ${permitions}
+                                          class="custom-control-input"
+                                          id="customSwitchAllTop"
+                                          onclick="setPermitions(this)">
+                              <label class="custom-control-label" for="customSwitchAllTop"></label>
+                            </div>
+                          </td>
+                        </tr>`;
+
                   for (let i=0;i<data.themes.length;i++){
 
                       let permition = '';
@@ -167,30 +195,47 @@
                             </tr>` 
                   }
 
+                  s+= ` <tr>
+                          <td colspan="2"></td>
+                          <td class="text-center">
+                            <div class="custom-control custom-switch">
+                              <input type="checkbox" 
+                                          ${permitions}
+                                          class="custom-control-input"
+                                          id="customSwitchAllBottom"
+                                          onclick="setPermitions(this)">
+                              <label class="custom-control-label" for="customSwitchAllBottom"></label>
+                            </div>
+                          </td>
+                        </tr>`;
                   let tbody = crudTable.querySelector('tbody');
                   tbody.innerHTML = s;
               } 
           },
           error: function (jqXHR, exception) {
-            if (jqXHR.status === 0) {
-              alert('Not connect. Verify Network.');
-            } else if (jqXHR.status == 404) {
-              alert('Requested page not found (404).');
-            } else if (jqXHR.status == 500) {
-              alert('Internal Server Error (500).');
-            } else if (exception === 'parsererror') {
-              alert('Requested JSON parse failed.');
-            } else if (exception === 'timeout') {
-              alert('Time out error.');
-            } else if (exception === 'abort') {
-              alert('Ajax request aborted.');
-            } else {
-              alert('Uncaught Error. ' + jqXHR.responseText);
-            }
+            console.log('Ошибка интернета.')
           }
       });
     }
 
+    function setPermitions(el) {
+      $.ajax({
+        url: baseURL+"set_permitions",
+        data: {
+            current_user: localStorage.getItem('current_user'),
+            themes: themes_on_page,
+            permition: el.checked,
+        },       
+        method: 'post',           
+        success: function(data){ 
+            console.log(data);
+            location.reload();
+        },
+        error: function (jqXHR, exception) {
+          console.log('Ошибка интернета.')
+        }
+      });
+    }
 
     function setCurrentUser() {
       let user_id = inputUsers.options[inputUsers.options.selectedIndex].value;
@@ -205,14 +250,12 @@
     }
 
     function setPermition(el,theme_id) {
-
       $.ajax({
         url: baseURL+"set_permition",
         data: {
             current_user: localStorage.getItem('current_user'),
             theme_id: theme_id,
             permition: el.checked,
-            token: "sdfsdfsdfsdfsdf"
         },       
         method: 'post',           
         success: function(data){ 
