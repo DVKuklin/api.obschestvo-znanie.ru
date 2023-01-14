@@ -1,5 +1,6 @@
 @extends(backpack_view('blank'))
 
+
 @php
   $defaultBreadcrumbs = [
     trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dashboard'),
@@ -23,7 +24,6 @@
 @section('content')
   <center>
     <div id="tools_panel" class="form-inline">
-
         <div class="form-group">
 
             <label for="inputUsers" class="m-2">Пользователь</label>
@@ -51,21 +51,7 @@
           </tr>
         </thead>
         <tbody>
-          <!-- <tr>
-            <td>1</td>
-            <td>Тема</td>
-            <td>Доступ</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>Тема</td>
-            <td>Доступ</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>Тема</td>
-            <td>Доступ</td>
-          </tr> -->
+
         </tbody>
       </table>
 </center>
@@ -91,28 +77,30 @@
 
 <script>
     const baseURL = document.location.protocol + "//" + document.location.host + "/api/admin/";
-    
+
+    function getCookie(name) {
+        let matches = document.cookie.match(new RegExp(
+          "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+        ));
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+
+
     let current_user = localStorage.getItem('current_user');
     let current_section = localStorage.getItem('current_section');
 
     dataBoot();
 
     function dataBoot() {
-      function getCookie(name) {
-        let matches = document.cookie.match(new RegExp(
-          "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-        ));
-        return matches ? decodeURIComponent(matches[1]) : undefined;
-      }
 
+      
       //Загружаем данные и формируем таблицу
       $.ajax({
           url: baseURL+"get_data_for_user_extended",
           headers: {'X-XSRF-TOKEN': getCookie('XSRF-TOKEN')},
           data: {
               current_user: current_user,
-              current_section: current_section,
-              token: "sdfsdfsdfsdfsdf"
+              current_section: current_section
           },       
           method: 'post',           
           success: function(data){ 

@@ -15,17 +15,9 @@ class AdminApiController extends Controller
     // http://127.0.0.1:8000/api/admin/get_data_for_user_extended
     // {
     //     "current_user":5,
-    //     "token":"sdfsdfsdfsdfsdf",
     //     "current_section":5
     // }
     public function getDataForUserExtended(Request $request) {
-
-        if ($request->token != "sdfsdfsdfsdfsdf") {
-            return [
-                'status'=>'notfound',
-                'message'=>'Something went wrong.'
-            ];
-        }
 
         //Верифицируем current_user
         $user_id = (int)$request->current_user;
@@ -105,12 +97,6 @@ class AdminApiController extends Controller
     }
 
     public function setPermition(Request $r) {
-        if ($r->token != "sdfsdfsdfsdfsdf") {
-            return [
-                'status'=>'notfound',
-                'message'=>'Something went wrong.'
-            ];
-        }
 
         $res = User::where('id',$r->current_user)->select('allowed_themes')->first();
 
@@ -147,8 +133,6 @@ class AdminApiController extends Controller
             ];
         }
 
-
-
         $jsonData = json_encode($permitions);
 
         $res = User::where('id',$r->current_user)->update(['allowed_themes'=>$jsonData]);
@@ -169,13 +153,11 @@ class AdminApiController extends Controller
         return $data;
     }
 
+    public function setPermitions(Request $request) {
+        return $request->all();
+    }
+
     public function getDataForParagraphsEdit(Request $r) {
-        if ($r->token != "sdfsdfsdfsdfsdf") {
-            return [
-                'status'=>'notfound',
-                'message'=>'Something went wrong.'
-            ];
-        }
 
         //Верификация current_section
         $current_section = (int)$r->current_section;
@@ -223,15 +205,11 @@ class AdminApiController extends Controller
 
         //Результирующий набор данных
         $data = [
-            // 'current_user'=>$user_id,
             'status'=>'success',
             'current_section'=>$current_section,
             'current_theme'=>$current_theme,
             'paragraphs' => $paragraphs
-            // 'sections'=>$sections
         ];
         return $data;
     }
-
-
 }
