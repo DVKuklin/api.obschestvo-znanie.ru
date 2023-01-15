@@ -50,7 +50,7 @@ class AdminApiController extends Controller
         }
         
         //Пользователи
-        $users = User::select('id','name')->get();
+        $users = User::select('id','name','email')->get();
 
         //Разделы
         $sections = Section::select('id','name')->orderBy('id', 'asc')->get();

@@ -16,7 +16,7 @@ class UserExtendedController extends CrudController
 
     public function setup() {
         $this->crud->setRoute(config('backpack.base.route_prefix') . '/user_extended');
-        $this->crud->setEntityNameStrings('Расширенная панель пользователей', 'РАСШИРЕННАЯ ПАНЕЛЬ УПРАВЛЕНИЯ ПОЛЬЗОВАТЕЛЯМИ');
+        $this->crud->setEntityNameStrings('Расширенная панель управления пользователями пользователей', 'Расширенная панель управления пользователями');
         $this->crud->setListView('custom_admin.user-extended');
 
     }

@@ -122,7 +122,7 @@
                       } else {
                           userActive == "";
                       }
-                      s += `<option ${userActive} value="${item.id}">${item.name}</option>`;
+                      s += `<option ${userActive} value="${item.id}">${item.name} - ${item.email}</option>`;
 
                       userActive = "";
                   });
