@@ -417,4 +417,43 @@ class AdminApiController extends Controller
             'message' => "Paragraph was deleted."
         ];
     }
+
+    public function saveParagraphs(Request $request) {
+        //Валидация
+        $paragraphs = $request->paragraphs;
+
+        if (gettype($paragraphs)!='array') {
+            return [
+                'status'=>'badData'
+            ];
+        }
+
+        for ($i=0;$i<count($paragraphs);$i++) {
+            if (gettype((int)$paragraphs[$i]['id']) != 'integer' or (int)$paragraphs[$i]['id'] == 0 or !isset($paragraphs[$i]['content'])) {
+                return [
+                    'status'=>'badData'
+                ];
+            }
+        }
+
+        try {
+            foreach($paragraphs as $paragraph) {
+                $res = Paragraph::where('id',$paragraph['id'])->update(['content'=>$paragraph['content']]);
+                if (!$res) {
+                    return [
+                        'status'=>'error',
+                        'message'=>'Ошибка БД'
+                    ];
+                }
+            }
+
+            return [
+                'status'=>'success'
+            ];
+        }catch(\Exception $e) {
+            return [
+                'status'=>'exception'
+            ];
+        }
+    }
 }

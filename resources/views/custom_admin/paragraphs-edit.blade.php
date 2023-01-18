@@ -37,6 +37,10 @@
                 <option selected>Название темы</option>
                 <option>...</option>
             </select>        
+
+            <button id="btn_saveParagraphs"  class="btn btn-warning m-2" onclick="saveParagraphs()" disabled>
+              Сохранить изменения.
+            </button>
         </div> 
     </div>
 
@@ -75,12 +79,25 @@
 
 @endsection
 <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+
+
 <script src="https://cdn.ckeditor.com/ckeditor5/35.4.0/classic/ckeditor.js"></script>
 
 <script src="/admin_assets/js/paragraphs-edit.js">
 </script>
 
 <script>
+let btnDelete = 
+`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+  <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
+</svg>`;
+let btnApply = 
+`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5z"/>
+</svg>`;
+let btnAdd = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+</svg>`;
 function getCookie(name) {
   let matches = document.cookie.match(new RegExp(
     "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
@@ -92,6 +109,9 @@ const baseURL = document.location.protocol + "//" + document.location.host + "/a
     
 let current_section = localStorage.getItem('paragraphs-edit-current_section');
 let current_theme = localStorage.getItem('paragraphs-edit-current_theme');
+
+let editors = [];//Здесь будут эдиторы
+let isDataChanged = false;//Если данные были изменены, то будет true
 
 dataBoot();
 
@@ -146,13 +166,24 @@ function dataBoot() {
                         <td><div id="editor${i}">${data.paragraphs[i].content}</div></td>
                         <td class="td-with-buttons">
                           <div class="button-container">
-                            <button  class="btn btn-primary" onclick="addParagraph(${data.paragraphs[i].sort},'above')"><nobr>Добавить сверху</nobr></button>
-                            <div>
-                              <button  class="btn btn-danger my-2" onclick="deleteParagraph(${data.paragraphs[i].id},${data.paragraphs[i].sort})">Удалить</button>
-                              <button  class="btn btn-warning my-2">Применить</button>
-                            </div>
-                            <button  class="btn btn-primary" onclick="addParagraph(${data.paragraphs[i].sort},'below')"><nobr>Добавить снизу</nobr></button>
-                          </div>
+                            <button  class="btn btn-primary my-1" 
+                                     onclick="addParagraph(${data.paragraphs[i].sort},'above')" title="Добавить сверху">
+                              ${btnAdd}
+                            </button>
+                            <button  class="btn btn-danger my-1" 
+                                       onclick="deleteParagraph(${data.paragraphs[i].id},${data.paragraphs[i].sort})" title="Удалить">
+                                ${btnDelete}
+                            </button>`;
+                if (i==data.paragraphs.length-1) {
+                  s+=`      <button  class="btn btn-primary my-1" 
+                                     onclick="addParagraph(${data.paragraphs[i].sort},'below')" title="Добавить снизу">
+                              ${btnAdd}
+                            </button>`;
+                } else {
+                  s+='       <div></div>';
+                }
+
+                  s+=`     </div>
                         </td>
                       </tr>` 
             }
@@ -162,17 +193,72 @@ function dataBoot() {
           
           //Подключаем editors
           for (let i=0;i<data.paragraphs.length;i++){
+            // InlineEditor
+            //     .create( document.querySelector( `#editor${i}` ) )
+            //     .catch( error => {
+            //         console.error( error );
+            //     } );
             ClassicEditor
-                .create( document.querySelector( `#editor${i}` ) )
-                .catch( error => {
-                    console.error( error );
+              .create( document.querySelector( `#editor${i}` ) )
+              .then( editor => {
+                // console.log( editor );
+
+                let ob = {
+                  editor: editor,
+                  paragraph_id: data.paragraphs[i].id
+                }
+                editors[i] = ob;
+
+                editor.model.document.on( 'change:data', () => {
+                  isDataChanged = true;
+                  btn_saveParagraphs.removeAttribute('disabled');
                 } );
+              } )
+              .catch( error => {
+                  console.error( error );
+              } );
           }
         },
       error: function (jqXHR, exception) {
         console.log('Ошибка интернета.')
       }
     });
+}
+
+function saveParagraphs() {
+  if (!confirm("Поддтвердите сохранение изменений.")) return;
+
+  let paragraphs = [];
+
+  for (let i=0;i<editors.length;i++) {
+    let ob = {
+      content: editors[i].editor.getData(),
+      id: editors[i].paragraph_id
+    }
+    paragraphs[i] = ob;
+  }
+
+  $.ajax({
+        url: baseURL+"save_paragraphs",
+        headers: {'X-XSRF-TOKEN': getCookie('XSRF-TOKEN')},
+        data: {
+            paragraphs: paragraphs
+        },       
+        method: 'post',           
+        success: function(data){ 
+          if (data.status == "success") {
+            btn_saveParagraphs.setAttribute('disabled','disabled');
+            isDataChanged = false;
+            alert('Все изменения успешно сохранены.');
+          } else {
+            alert('Что то пошло не так, изменения не сохранены.');
+          }
+          // console.log(data);
+        },
+      error: function (jqXHR, exception) {
+        console.log('Ошибка интернета.')
+      }
+  });
 }
 
 function setCurrentSection() {
@@ -188,7 +274,14 @@ function setCurrentTheme() {
 }
 
 function addParagraph(sort,position) {
-  $.ajax({
+  let b = true;//Можно или нельзя добавлять параграф
+  if (isDataChanged) {
+    let message = "У Вас есть несохраненные изменения. При добавлении параграфа они будут потеряны. Если все равно хотите продолжить, нажмите ОК.";
+    if (!confirm(message)) b=false;
+  } 
+  
+  if (b) {
+    $.ajax({
         url: baseURL+"add_paragraph",
         headers: {'X-XSRF-TOKEN': getCookie('XSRF-TOKEN')},
         data: {
@@ -207,10 +300,16 @@ function addParagraph(sort,position) {
       error: function (jqXHR, exception) {
         console.log('Ошибка интернета.')
       }
-  });
+    });
+  }
 }
 
 function deleteParagraph(id,sort) {
+  if (isDataChanged) {
+    let message = "У Вас есть несохраненные изменения. При удалении параграфа они будут потеряны. Если все равно хотите продолжить, нажмите ОК.";
+    if (!confirm(message)) return;
+  } 
+
   let confirmation = confirm("Вы действительно хотите удалить параграф "+sort);
   if (!confirmation) return;
   $.ajax({

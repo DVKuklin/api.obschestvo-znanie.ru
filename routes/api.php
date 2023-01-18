@@ -57,7 +57,7 @@ Route::controller(AdminApiController::class)->group(function() {
     Route::post('admin/set_permitions','setPermitions');//Установка сразу нескольких разрешений
     Route::post('admin/add_paragraph','addParagraph');
     Route::post('admin/delete_paragraph','deleteParagraph');
-    
+    Route::post('admin/save_paragraphs','saveParagraphs');
 });
 
 Route::get('/test', function (Request $request) {
