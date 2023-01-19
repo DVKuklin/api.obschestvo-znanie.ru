@@ -49,8 +49,8 @@ Route::controller(DeveloperController::class)->group(function() {
     Route::get('test_get_me','getMe')->middleware('auth:sanctum');
 });
 
-// Route::middleware('checkIfAdmin')->controller(AdminApiController::class)->group(function() {
-Route::controller(AdminApiController::class)->group(function() {
+Route::middleware('checkIfAdmin')->controller(AdminApiController::class)->group(function() {
+// Route::controller(AdminApiController::class)->group(function() {
     Route::post('admin/get_data_for_user_extended','getDataForUserExtended');
     Route::post('admin/get_data_for_paragraphs_edit','getDataForParagraphsEdit');    
     Route::post('admin/set_permition','setPermition');

@@ -161,9 +161,9 @@ function dataBoot() {
             s = '';
             for (let i=0;i<data.paragraphs.length;i++){
                 s += `<tr>  
-                        <td>${data.paragraphs[i].sort}</td>
-                        <td>${data.paragraphs[i].content}</td>
-                        <td><div id="editor${i}">${data.paragraphs[i].content}</div></td>
+                        <td>${data.paragraphs[i].sort}</td>`+
+                        // <td>${data.paragraphs[i].content}</td>
+                        `<td><div id="editor${i}">${data.paragraphs[i].content}</div></td>
                         <td class="td-with-buttons">
                           <div class="button-container">
                             <button  class="btn btn-primary my-1" 
@@ -274,6 +274,10 @@ function setCurrentTheme() {
 }
 
 function addParagraph(sort,position) {
+  if (sort==null || editors.length == 1) {
+    sort = 1;
+  } 
+
   let b = true;//Можно или нельзя добавлять параграф
   if (isDataChanged) {
     let message = "У Вас есть несохраненные изменения. При добавлении параграфа они будут потеряны. Если все равно хотите продолжить, нажмите ОК.";
