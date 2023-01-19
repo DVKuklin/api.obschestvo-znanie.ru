@@ -42,7 +42,7 @@ class ParagraphCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        Widget::add()->type('style')->content('assets/css/paragraphs-listOperation-style.css');
+        Widget::add()->type('style')->content('admin/css/paragraphs-listOperation-style.css');
         // CRUD::column('content')->label('контент')->type('textarea')->escaped('true');
         
         $this->crud->addColumn([

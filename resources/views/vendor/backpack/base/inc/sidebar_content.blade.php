@@ -11,5 +11,5 @@
 
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('user_extended') }}"><i class="nav-icon la la-user-plus"></i> Расширенная панель управления пользователями</a></li>
 
-<!-- <li class="nav-item"><a class="nav-link" href="{{ backpack_url('paragraphs_edit') }}"><i class="nav-icon la la-dedent"></i> Редактирование параграфов</a></li> -->
+<li class="nav-item"><a class="nav-link" href="{{ backpack_url('paragraphs_edit') }}"><i class="nav-icon la la-dedent"></i> Абзацы</a></li>
 

@@ -50,16 +50,19 @@ class AdminApiController extends Controller
         }
         
         //Пользователи
-        $users = User::select('id','name')->get();
+        $users = User::select('id','name','email')->get();
 
         //Разделы
         $sections = Section::select('id','name')->orderBy('id', 'asc')->get();
 
         //Темы с разрешениями по пользователю
-        $res = User::where('id',$user_id)->select('allowed_themes')->first();
-        $permitions = json_decode($res->allowed_themes);
+        $user = User::where('id',$user_id)->select('allowed_themes')->first();
+        $permitions = json_decode($user->allowed_themes);
 
-        $themes = Theme::where('section',$current_section)->select('id','sort','name')->get();
+        $themes = Theme::where('section',$current_section)
+                        ->select('id','sort','name')
+                        ->orderBy('sort','asc')
+                        ->get();
 
         $themes_with_permissions = [];
 
@@ -174,10 +177,12 @@ class AdminApiController extends Controller
         
             if (gettype($permitions)=='array') {
                 for ($i=0;$i<count($permitions);$i++) {
-                    if ($permitions[$i]->id == $themes[$j]) {
-                        $permitions[$i]->allowed = $request->permition;
-                        $isDone = true;
-                        break;
+                    if (isset($permitions[$i])) {
+                        if ($permitions[$i]->id == $themes[$j]) {
+                            $permitions[$i]->allowed = $request->permition;
+                            $isDone = true;
+                            break;
+                        }
                     }
                 }
         
@@ -218,10 +223,9 @@ class AdminApiController extends Controller
 
     }
 
-    public function getDataForParagraphsEdit(Request $r) {
-
+    public function getDataForParagraphsEdit(Request $request) {
         //Верификация current_section
-        $current_section = (int)$r->current_section;
+        $current_section = (int)$request->current_section;
         if (gettype($current_section)!="integer") {
             $currentSection = Section::select('id')->orderBy('id', 'asc')->get();
             $current_section = $currentSection[0]->id; 
@@ -235,42 +239,221 @@ class AdminApiController extends Controller
             }
         }
 
+        $sections = Section::orderBy('sort','asc')->select('id','name')->get();
+
         //Верификация current_theme
-        $current_theme = (int)$r->current_theme;
+        $current_theme = (int)$request->current_theme;
 
         if (gettype($current_theme)!="integer") {
-            $currentTheme = Theme::select('id','sort')->where('section',$current_section)->orderBy('sort', 'asc')->get();            
+            $currentTheme = Theme::select('id')
+                                    ->where('section',$current_section)
+                                    ->get();            
             $current_theme = $currentTheme[0]->id; 
         } else {
-            $currentTheme = Theme::where('id',$current_theme)->where('section',$current_section)->select('id')->first();
+            $currentTheme = Theme::where('id',$current_theme)
+                                    ->where('section',$current_section)
+                                    ->select('id')
+                                    ->first();
             if ($currentTheme) {
                 $current_theme = $currentTheme->id;
             } else {
-                $currentTheme = Theme::select('id','sort')->where('section',$current_section)->orderBy('sort', 'asc')->get();
-                if (count($currentTheme)==0) {
-                    $current_theme=null;
+                $currentTheme = Theme::select('id')
+                                ->where('section',$current_section)
+                                ->orderBy('sort')
+                                ->get();
+                if ($currentTheme) {
+                    $current_theme = $currentTheme[0]->id;
                 } else {
-                    $current_theme = $currentTheme[0]->id; 
+                    $current_theme = null;
                 }
             }
         }
         
+        $themes = Theme::where('section','=',$current_section)
+                        ->select('id','sort','name')
+                        ->orderBy('sort')
+                        ->get();
+
         //Достаем параграфы
 
         if ($current_theme == null) {
             $paragraphs = null;
         } else {
-            $paragraphs = Paragraph::where('theme',$current_theme)->select('id','content','sort')->get();
+            $paragraphs = Paragraph::where('theme',$current_theme)
+                                    ->select('id','content','sort')
+                                    ->orderBy('sort','asc')
+                                    ->get();
             if (count($paragraphs)==0) $paragraphs = null;
         }
 
-        //Результирующий набор данных
+        // Результирующий набор данных
         $data = [
             'status'=>'success',
             'current_section'=>$current_section,
             'current_theme'=>$current_theme,
+            'themes'=>$themes,
+            'sections' => $sections,
             'paragraphs' => $paragraphs
         ];
         return $data;
+    }
+
+    public function addParagraph(Request $request) {
+
+        $theme = Theme::where('id',$request->theme)->select('id')->first();
+
+        if (!$theme) {
+            return [
+                'status'=>'error',
+                'message'=>'Theme not found'
+            ];
+        }
+
+        $new_paragraph_id = Paragraph::insertGetId([
+            'theme'=>$theme->id,
+        ]);
+
+        $paragraphs = Paragraph::where('theme',$request->theme)
+                                ->select('id')
+                                ->orderBy('sort','asc')
+                                ->get();
+
+        if (!$paragraphs) {
+            return [
+                'status'=>'error',
+                'message'=>'Some thing went wrong.'
+            ];
+        }
+
+        try {
+            $index = 1;
+
+            foreach ($paragraphs as $paragraph) {
+
+                if ($new_paragraph_id == $paragraph->id) {
+                    continue;
+                }
+    
+                if ($index == (int)$request->sort) {
+                    if ($request->position == "above") {
+                        Paragraph::where('id',$new_paragraph_id)->update(['sort'=>$index]);
+                        $index++;
+                        Paragraph::where('id',$paragraph->id)->update(['sort'=>$index]);
+                    } else {
+                        Paragraph::where('id',$paragraph->id)->update(['sort'=>$index]);
+                        $index++;
+                        Paragraph::where('id',$new_paragraph_id)->update(['sort'=>$index]);
+                    }
+                } else {
+                    Paragraph::where('id',$paragraph->id)->update(['sort'=>$index]);
+                }
+    
+                $index++;
+            }
+    
+            return [
+                'status'=>'success'
+            ];
+    
+        } catch (\Exception $e) {
+            return [
+                'status'=>'error',
+                'message'=>'Ошибка базы данных'
+            ];
+        }
+    }
+
+    public function deleteParagraph(Request $request) {
+
+        $paragraph = Paragraph::where('id',$request->paragraph_id)->select('theme')->first();
+
+        $theme_id = $paragraph->theme;
+
+        try {
+            $res = Paragraph::where('id',$request->paragraph_id)->delete();
+            if (!$res) {
+                return [
+                    'status' => 'error',
+                    'message' => "Paragraph was not deleted."
+                ];
+            }
+        }catch(\Exception $e){
+            return [
+                'status' => 'exception',
+                'message' => "Some exception.",
+                // 'ecxeption' => $e
+            ];
+        }
+
+        //Переделываем сортировку
+        $paragraphs = Paragraph::where('theme',$theme_id)
+                                ->select('id')
+                                ->orderBy('sort','asc')
+                                ->get();
+
+        if (!$paragraphs) {
+            return [
+                'status'=>'error',
+                'message'=>'Some thing went wrong.'
+            ];
+        }
+
+        try {
+            $index = 1;
+
+            foreach ($paragraphs as $paragraph) {
+                Paragraph::where('id',$paragraph->id)->update(['sort'=>$index]);
+                $index++;
+            }
+        } catch (\Exception $e) {
+            return [
+                'status'=>'error',
+                'message'=>'Ошибка базы данных'
+            ];
+        }
+
+        return [
+            'status' => 'success',
+            'message' => "Paragraph was deleted."
+        ];
+    }
+
+    public function saveParagraphs(Request $request) {
+        //Валидация
+        $paragraphs = $request->paragraphs;
+
+        if (gettype($paragraphs)!='array') {
+            return [
+                'status'=>'badData'
+            ];
+        }
+
+        for ($i=0;$i<count($paragraphs);$i++) {
+            if (gettype((int)$paragraphs[$i]['id']) != 'integer' or (int)$paragraphs[$i]['id'] == 0 or !isset($paragraphs[$i]['content'])) {
+                return [
+                    'status'=>'badData'
+                ];
+            }
+        }
+
+        try {
+            foreach($paragraphs as $paragraph) {
+                $res = Paragraph::where('id',$paragraph['id'])->update(['content'=>$paragraph['content']]);
+                if (!$res) {
+                    return [
+                        'status'=>'error',
+                        'message'=>'Ошибка БД'
+                    ];
+                }
+            }
+
+            return [
+                'status'=>'success'
+            ];
+        }catch(\Exception $e) {
+            return [
+                'status'=>'exception'
+            ];
+        }
     }
 }
