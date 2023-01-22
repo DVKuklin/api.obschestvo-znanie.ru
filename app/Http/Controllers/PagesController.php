@@ -92,6 +92,15 @@ class PagesController extends Controller
         $permitions = $user->allowed_themes;
         $permitions = json_decode($permitions);
 
+        if ($permitions == null) {
+            $data = [
+                'status' => 'notAllowed',
+                'section' => $section->name,
+                'theme' => $theme->sort.". ".$theme->name
+            ];
+            return $data;
+        }
+
         if (gettype($permitions)!="array") {
             $status = 'notAllowed';
         } else {
