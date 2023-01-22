@@ -12,3 +12,12 @@
 .crudTable-container {
     overflow-x:auto;
 }
+
+.how-on-page {
+    background-color: white !important;
+    min-width: 500px;
+}
+
+.in-editor {
+    max-width: 900px;
+}

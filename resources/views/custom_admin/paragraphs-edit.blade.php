@@ -48,13 +48,13 @@
       <table  id="crudTable"
               class="bg-white table table-striped table-hover nowrap rounded shadow-xs border-xs mt-2" cellspacing="0"
               style="max-width:800px">
-        <thead>
+        <!-- <thead>
           <tr>
             <th>Сорт</th>
             <th>Как на странице</th>
             <th>В редакторе</th>
           </tr>
-        </thead>
+        </thead> -->
         <tbody>
         </tbody>
       </table>
@@ -81,7 +81,7 @@
 <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
 
 
-<script src="https://cdn.ckeditor.com/ckeditor5/35.4.0/classic/ckeditor.js"></script>
+<script src="/admin_assets/ckeditor/ckeditor.js"></script>
 
 <script src="/admin_assets/js/paragraphs-edit.js">
 </script>
@@ -126,7 +126,9 @@ function dataBoot() {
         },       
         method: 'post',           
         success: function(data){ 
-
+            localStorage.setItem('paragraphs-edit-current_theme',data.current_theme);
+            current_theme = data.current_theme;
+            
             //Заполняем select разделы
             let s = '';
             let sectionActive = '';
@@ -162,8 +164,8 @@ function dataBoot() {
             for (let i=0;i<data.paragraphs.length;i++){
                 s += `<tr>  
                         <td>${data.paragraphs[i].sort}</td>`+
-                        // <td>${data.paragraphs[i].content}</td>
-                        `<td><div id="editor${i}">${data.paragraphs[i].content}</div></td>
+                        // <td class = "how-on-page">${data.paragraphs[i].content}</td>
+                        `<td class = "in-editor"><div id="editor${i}">${data.paragraphs[i].content}</div></td>
                         <td class="td-with-buttons">
                           <div class="button-container">
                             <button  class="btn btn-primary my-1" 

@@ -158,16 +158,16 @@ class AdminApiController extends Controller
 
     public function setPermitions(Request $request) {
         
-        $res = User::where('id',$request->current_user)->select('allowed_themes')->first();
+        $user = User::where('id',$request->current_user)->select('allowed_themes')->first();
 
-        if (!$res) {
+        if (!$user) {
             return [
                 'status'=>'error',
                 'message'=>'Something went wrong.'
             ];
         }
 
-        $permitions = json_decode($res->allowed_themes);
+        $permitions = json_decode($user->allowed_themes);
 
         $themes = $request->themes;
 
@@ -175,11 +175,18 @@ class AdminApiController extends Controller
 
             $isDone = false;//Установили разрешение или нет
         
-            if (gettype($permitions)=='array') {
+            if ($permitions!=null) {
                 for ($i=0;$i<count($permitions);$i++) {
-                    if (isset($permitions[$i])) {
+
+                    if (isset($permitions[$i]->id)) {
                         if ($permitions[$i]->id == $themes[$j]) {
                             $permitions[$i]->allowed = $request->permition;
+                            $isDone = true;
+                            break;
+                        }
+                    } else {
+                        if ($permitions[$i]['id'] == $themes[$j]) {
+                            $permitions[$i]['allowed'] = $request->permition;
                             $isDone = true;
                             break;
                         }
@@ -194,7 +201,7 @@ class AdminApiController extends Controller
                 }            
             } else {
                 $permitions = [
-                    [
+                    (object)[
                         "id"=>$themes[$j],
                         "allowed"=>$request->permition
                     ]
@@ -204,9 +211,9 @@ class AdminApiController extends Controller
 
         $jsonData = json_encode($permitions);
 
-        $res = User::where('id',$request->current_user)->update(['allowed_themes'=>$jsonData]);
+        $user = User::where('id',$request->current_user)->update(['allowed_themes'=>$jsonData]);
 
-        if ($res) {
+        if ($user) {
             $status = 'success';
             $message = 'That is ok';
         } else {
@@ -309,9 +316,23 @@ class AdminApiController extends Controller
             ];
         }
 
-        $new_paragraph_id = Paragraph::insertGetId([
-            'theme'=>$theme->id,
-        ]);
+        $new_paragraph_id = null;
+
+        try {
+            $new_paragraph_id = Paragraph::insertGetId([
+                'theme'=>$theme->id,
+            ]);
+            if (!$new_paragraph_id) {
+                return [
+                    'status'=>'BDError'
+                ];
+            }
+        }catch(\Exception $e){
+            return [
+                'status'=>'BDException'
+            ];
+        }
+
 
         $paragraphs = Paragraph::where('theme',$request->theme)
                                 ->select('id')
