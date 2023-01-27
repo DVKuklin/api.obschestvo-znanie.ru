@@ -26,10 +26,16 @@ Route::controller(PagesController::class)->group(function() {
     Route::get('sections','getSections');
     Route::post('get_themes_and_section_by_section_url',
                 'getThemesAndSectionBySectionUrl');
-    Route::post('get_paragraps_by_section_and_theme_url',
-                'getParagraphsBySectionAndThemeUrl')->middleware('auth:sanctum');
     Route::post('get_section_name_and_theme_name_by_url',
                 'getSectionNameAndThemeNameByUrl');
+    Route::post('get_paragraps_by_section_and_theme_url',
+                'getParagraphsBySectionAndThemeUrl')->middleware('auth:sanctum');
+                Route::post('set_paragraph_to_favorites',
+                'setParagraphToFavorites')->middleware('auth:sanctum');
+    Route::post('delete_paragraph_from_favorites',
+                'deleteParagraphFromFavorites')->middleware('auth:sanctum');
+    Route::post('get_data_for_favorites',
+                'getDataForFavorites')->middleware('auth:sanctum');
 });
 
 Route::controller(UserController::class)->group(function() {
@@ -37,6 +43,7 @@ Route::controller(UserController::class)->group(function() {
     Route::post('login','login');
     Route::get('logout','logout')->middleware('auth:sanctum');
     Route::get('get_user_name','getUserName')->middleware('auth:sanctum');
+    Route::get('is_authenticated','isAuthenticated')->middleware('auth:sanctum');
 });
 
 Route::controller(DeveloperController::class)->group(function() {
@@ -60,7 +67,10 @@ Route::middleware('checkIfAdmin')->controller(AdminApiController::class)->group(
     Route::post('admin/save_paragraphs','saveParagraphs');
 });
 
-Route::get('/test', function (Request $request) {
-    return 'test';
+Route::post('/date_time_test', function (Request $request) {
+    // $d = time()+(3*60*60);
+
+    $d = time();
+    return date("d.m.Y H.i.s",$d) ;
 });
 
