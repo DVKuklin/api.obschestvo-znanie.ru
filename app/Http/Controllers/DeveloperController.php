@@ -114,6 +114,46 @@ class DeveloperController extends Controller
     public function getMe(Request $request) {
         return $request->user();
     }
+
+
+    public function splitParagraphs(Request $request) {
+        $themes = Theme::all();
+
+        foreach ($themes as $theme) {
+            $paragraphs = Paragraph::where('theme',$theme->id)->get();
+
+            $last_paragraph = $paragraphs[count($paragraphs)-1];
+
+            $id=$last_paragraph->id;
+    
+            $new_paragraphs_content = explode('<p style="margin-left: 0cm; margin-right: 0cm;"> </p>',$last_paragraph->content);
+    
+            if (count($new_paragraphs_content) == 1) {
+                continue;
+            }
+            
+            $sort = $last_paragraph->sort;
+    
+            if ($sort == null) {
+                $sort = 1;
+            }
+    
+            Paragraph::where('id',$id)->update([
+                                                    'content'=>$new_paragraphs_content[0],
+                                                    'sort'=>$sort
+                                                ]);
+    
+            for ($i=1;$i<count($new_paragraphs_content);$i++) {
+                $p = Paragraph::create([
+                    'content'=>$new_paragraphs_content[$i],
+                    'theme'=>$theme->id,
+                    'sort'=>$sort+$i
+                ]);
+            }
+        }
+
+        return "ok";
+    }
 }
 /*
 "id": 21,
