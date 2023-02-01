@@ -7,7 +7,7 @@
 <!-- la la-male это pupiles -->
 
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('theme') }}"><i class="nav-icon la la-comment"></i> Темы</a></li>
-<li class="nav-item"><a class="nav-link" href="{{ backpack_url('paragraph') }}"><i class="nav-icon la la-reorder"></i> Параграфы</a></li>
+<!-- <li class="nav-item"><a class="nav-link" href="{{ backpack_url('paragraph') }}"><i class="nav-icon la la-reorder"></i> Параграфы</a></li> -->
 
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('user_extended') }}"><i class="nav-icon la la-user-plus"></i> Расширенная панель управления пользователями</a></li>
 
