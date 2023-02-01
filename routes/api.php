@@ -52,15 +52,16 @@ Route::controller(UserController::class)->group(function() {
     Route::get('is_authenticated','isAuthenticated')->middleware('auth:sanctum');
 });
 
-Route::controller(DeveloperController::class)->group(function() {
-    Route::post('change_paragraps_from_old_table','changeParagraphsFromOldTable');
-    Route::post('test','test');
-    Route::post('set_theme_url','setThemeUrl');
-    Route::post('set_allowed_themes','setAllowedThemes');
-    Route::get('get_headers','getHeaders');
-    Route::post('test_get_token','getToken');
-    Route::get('test_get_me','getMe')->middleware('auth:sanctum');
-});
+// Route::prefix('dev')->controller(DeveloperController::class)->group(function() {
+//     Route::post('change_paragraps_from_old_table','changeParagraphsFromOldTable');
+//     Route::post('test','test');
+//     Route::post('set_theme_url','setThemeUrl');
+//     Route::post('set_allowed_themes','setAllowedThemes');
+//     Route::get('get_headers','getHeaders');
+//     Route::post('test_get_token','getToken');
+//     Route::get('test_get_me','getMe')->middleware('auth:sanctum');
+//     Route::post('split_paragraphs','splitParagraphs');
+// });
 
 Route::middleware('checkIfAdmin')->controller(AdminApiController::class)->group(function() {
 // Route::controller(AdminApiController::class)->group(function() {

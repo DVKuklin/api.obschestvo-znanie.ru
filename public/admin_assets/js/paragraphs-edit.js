@@ -166,12 +166,20 @@ function saveParagraphs() {
 }
 
 function setCurrentSection() {
+    if (isDataChanged) {
+      let message = "У Вас есть несохраненные изменения. При смене раздела они будут потеряны. Если все равно хотите продолжить, нажмите ОК.";
+      if (!confirm(message)) return;
+    } 
     let section_id = inputSections.options[inputSections.options.selectedIndex].value;
     localStorage.setItem('paragraphs-edit-current_section',section_id);
     location.reload();
 }
 
 function setCurrentTheme() {
+    if (isDataChanged) {
+      let message = "У Вас есть несохраненные изменения. При смене темы они будут потеряны. Если все равно хотите продолжить, нажмите ОК.";
+      if (!confirm(message)) return;
+    } 
     let theme_id = inputThemes.options[inputThemes.options.selectedIndex].value;
     localStorage.setItem('paragraphs-edit-current_theme',theme_id);
     location.reload();
