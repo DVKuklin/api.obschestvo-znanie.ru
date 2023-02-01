@@ -34,8 +34,14 @@ Route::controller(PagesController::class)->group(function() {
                 'setParagraphToFavorites')->middleware('auth:sanctum');
     Route::post('delete_paragraph_from_favorites',
                 'deleteParagraphFromFavorites')->middleware('auth:sanctum');
-    Route::post('get_data_for_favorites',
-                'getDataForFavorites')->middleware('auth:sanctum');
+    Route::post('get_data_for_favorites_order_by_section_theme_asc',
+                'getDataForFavoritesOrderBySectionThemeAsc')->middleware('auth:sanctum');
+    Route::post('get_data_for_favorites_order_by_section_theme_desc',
+                'getDataForFavoritesOrderBySectionThemeDesc')->middleware('auth:sanctum');
+    Route::post('get_data_for_favorites_order_by_date_time_asc',
+                'getDataForFavoritesOrderByDateTimeAsc')->middleware('auth:sanctum');
+    Route::post('get_data_for_favorites_order_by_date_time_desc',
+                'getDataForFavoritesOrderByDateTimeDesc')->middleware('auth:sanctum');
 });
 
 Route::controller(UserController::class)->group(function() {

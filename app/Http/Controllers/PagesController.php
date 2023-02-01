@@ -255,8 +255,7 @@ class PagesController extends Controller
         }
     }
 
-    public function getDataForFavorites(Request $request) {
-
+    public function getDataForFavoritesOrderBySectionThemeAsc(Request $request) {
         $favorites = json_decode($request->user()->favorites);
 
         if ($favorites == null or gettype($favorites) != 'array') {
@@ -275,96 +274,358 @@ class PagesController extends Controller
                                         ->join('themes','paragraphs.theme','=','themes.id')
                                         ->join('sections','themes.section','=','sections.id')
                                         ->select('paragraphs.id as id',
+                                                 'paragraphs.sort as paragraph_sort',
                                                  'content',
                                                  'themes.sort as theme_sort',
                                                  'themes.name as theme_name',
                                                  'sections.sort as section_sort',
                                                  'sections.name as section_name',
                                                  'sections.image as section_image')
-                                        ->get();
+                                        ->orderBy('sections.sort','asc')
+                                        ->orderBy('themes.sort','asc')
+                                        ->orderBy('paragraphs.sort','asc')
+                                        ->paginate(5);
+        
 
         //Добавляем время дату
-        $dataForFavoritesWithDateTime = [];
-
-        foreach($dataForFavorites as $i => $item) {
+        foreach($dataForFavorites as $i => &$item) {
             foreach($favorites as $favorite_item) {
                 if ($favorite_item->id == $item->id) {
-                    $dataForFavoritesWithDateTime[$i] = [
-                        'id' => $item->id,
-                        'content' => $item->content,
-                        'theme_sort' => $item->theme_sort,
-                        'theme_name' => $item->theme_name,
-                        'section_sort' => $item->section_sort,
-                        'section_name' => $item->section_name,
-                        'section_image' => $item->section_image,
-                        'date_time' => $favorite_item->date_time
-                    ];
+                    $item->date_time = date("d.m.Y H.i.s",$favorite_item->date_time);
                 }
             }
         }
 
-        //Сортировка по времени
-        function sort($data) {
+        return [
+            'status'=>'success',
+            'favorites'=>$dataForFavorites,
+        ];
+    }
+
+    public function getDataForFavoritesOrderBySectionThemeDesc(Request $request) {
+        $favorites = json_decode($request->user()->favorites);
+
+        if ($favorites == null or gettype($favorites) != 'array') {
+            return [
+                'status' => 'noData',
+                'message' => 'Data not exists'
+            ];
+        }
+
+        $paragraphs_id = [];
+        foreach ($favorites as $paragraph) {
+            array_push($paragraphs_id,$paragraph->id);
+        }
+
+        $dataForFavorites = Paragraph::whereIn('paragraphs.id',$paragraphs_id)
+                                        ->join('themes','paragraphs.theme','=','themes.id')
+                                        ->join('sections','themes.section','=','sections.id')
+                                        ->select('paragraphs.id as id',
+                                                 'paragraphs.sort as paragraph_sort',
+                                                 'content',
+                                                 'themes.sort as theme_sort',
+                                                 'themes.name as theme_name',
+                                                 'sections.sort as section_sort',
+                                                 'sections.name as section_name',
+                                                 'sections.image as section_image')
+                                        ->orderBy('sections.sort','desc')
+                                        ->orderBy('themes.sort','desc')
+                                        ->orderBy('paragraphs.sort','desc')
+                                        ->paginate(5);
+        
+
+        //Добавляем время дату
+        foreach($dataForFavorites as $i => &$item) {
+            foreach($favorites as $favorite_item) {
+                if ($favorite_item->id == $item->id) {
+                    $item->date_time = date("d.m.Y H.i.s",$favorite_item->date_time);
+                }
+            }
+        }
+
+        return [
+            'status'=>'success',
+            'favorites'=>$dataForFavorites,
+        ];
+    }
+
+    public function getDataForFavoritesOrderByDateTimeAsc (Request $request) {
+        $pagination=5;
+        $favorites = json_decode($request->user()->favorites);
+
+        //Сортируем по времени
+        function sortAsc($data) {
+            
             function isNotSorted($data) {
+                
                 for ($i=0;$i<count($data)-1;$i++) {
-                    if ($data[$i]['date_time']<$data[$i+1]['date_time']) {
+                    if ($data[$i]->date_time>$data[$i+1]->date_time) {
                         return true;
                     }
                 }
-    
                 return false;
             }
 
             while (isNotSorted($data)) {
                 for ($i=0;$i<count($data)-1;$i++) {
-                    if ($data[$i]['date_time']<$data[$i+1]['date_time']) {
+                    if ($data[$i]->date_time>$data[$i+1]->date_time) {
                         $temp = [
-                            'id' => $data[$i]['id'],
-                            'content' => $data[$i]['content'],
-                            'theme_sort' => $data[$i]['theme_sort'],
-                            'theme_name' => $data[$i]['theme_name'],
-                            'section_sort' => $data[$i]['section_sort'],
-                            'section_name' => $data[$i]['section_name'],
-                            'section_image' => $data[$i]['section_image'],
-                            'date_time' => $data[$i]['date_time']
+                            'id'=>$data[$i]->id,
+                            'date_time'=>$data[$i]->date_time
                         ];
+
+                        $data[$i]->id = $data[$i+1]->id;
+                        $data[$i]->date_time = $data[$i+1]->date_time;
     
-                        $data[$i]['id'] = $data[$i+1]['id'];
-                        $data[$i]['content'] = $data[$i+1]['content'];
-                        $data[$i]['theme_sort'] = $data[$i+1]['theme_sort'];
-                        $data[$i]['theme_name'] = $data[$i+1]['theme_name'];
-                        $data[$i]['section_sort'] = $data[$i+1]['section_sort'];
-                        $data[$i]['section_name'] = $data[$i+1]['section_name'];
-                        $data[$i]['section_image'] = $data[$i+1]['section_image'];
-                        $data[$i]['date_time'] = $data[$i+1]['date_time'];
-    
-                        $data[$i+1]['id'] = $temp['id'];
-                        $data[$i+1]['content'] = $temp['content'];
-                        $data[$i+1]['theme_sort'] = $temp['theme_sort'];
-                        $data[$i+1]['theme_name'] = $temp['theme_name'];
-                        $data[$i+1]['section_sort'] = $temp['section_sort'];
-                        $data[$i+1]['section_name'] = $temp['section_name'];
-                        $data[$i+1]['section_image'] = $temp['section_image'];
-                        $data[$i+1]['date_time'] = $temp['date_time'];
+                        $data[$i+1]->id = $temp['id'];
+                        $data[$i+1]->date_time =$temp['date_time'];
                     }
                 }
             }
 
             return $data;
         }
-        //END сортировка по времени
+        //END сортировка по времени восходящая
 
-        if ($request->sort == 'date_time_desc') {
-            $dataForFavoritesWithDateTime = sort($dataForFavoritesWithDateTime);
+        $favorites = sortAsc($favorites);
+        //Переводим дату в строку
+        for ($i=0;$i<count($favorites);$i++) {
+            $favorites[$i]->date_time = date("d.m.Y H.i.s",$favorites[$i]->date_time);
         }
 
-        foreach ($dataForFavoritesWithDateTime as &$item) {
-            $item['date_time'] = date("d.m.Y H.i.s",$item['date_time']);
+        $count_of_paragraphs = count($favorites);
+
+        $count_of_pages = $count_of_paragraphs/$pagination + 1;
+
+        //Валидация текущей страницы
+        if ($request->page) {
+            $current_page = (int)$request->page;
+        } else {
+            $current_page = 1;
+        }
+
+        if ($current_page > $count_of_pages or $current_page<=0) {
+            $current_page = 1;
+        }
+
+        //Достаем параграфы текущей страницы
+        $current_paragraphs = [];
+
+        for ($i=0;$i<$pagination;$i++) {
+            $index = ($current_page-1)*$pagination+$i;
+            if ($index>count($favorites)-1) {
+                break;
+            }
+            $current_paragraphs[$i] = [
+                'id'=>$favorites[$index]->id,
+                'date_time'=>$favorites[$index]->date_time
+            ];
+        }
+
+        //Создаем ссылки для кнопок
+        $url = url()->current();
+        if ($current_page == 1) {
+            $previous_url = null;
+        } else {
+            $previous_page = $current_page -1;
+            $previous_url = $url.'?page='.$previous_page;
+        }
+
+        $links[0] = [
+            'url' => $previous_url,
+            'label' => '<',
+            'active' => false
+        ];
+
+        for ($i=1;$i<=$count_of_pages;$i++) {
+            $active = false;
+            if ($i == $current_page) {
+                $active = true;
+            }
+            $links[$i] = [
+                'url' => $url.'?page='.$i,
+                'label' => $i,
+                'active' => $active
+            ];
+        }
+
+        if ($current_page == $count_of_pages) {
+            $next_url = null;
+        } else {
+            $next_page = $current_page +1;
+            $next_url = $url.'?page='.$next_page;
+        }
+
+        array_push($links,[
+            'url' => $next_url,
+            'label' => '>',
+            'active' => false
+        ]);
+
+        //Достаем параграфы для текущей страницы из базы
+        $dataFavorites = [];
+        foreach ($current_paragraphs as $i => $paragraph) {
+            $dataFavorites[$i] = Paragraph::where('paragraphs.id',$paragraph['id'])
+                                ->join('themes','paragraphs.theme','=','themes.id')
+                                ->join('sections','themes.section','=','sections.id')
+                                ->select('paragraphs.id as id',
+                                        'paragraphs.sort as paragraph_sort',
+                                        'content',
+                                        'themes.sort as theme_sort',
+                                        'themes.name as theme_name',
+                                        'sections.sort as section_sort',
+                                        'sections.name as section_name',
+                                        'sections.image as section_image')
+                                ->first();
+            $dataFavorites[$i]->date_time = $paragraph['date_time'];
         }
 
         return [
-            'status'=>'success',
-            'favorites'=>$dataForFavoritesWithDateTime
+            "status" => 'success',
+            'favorites' => [
+                'data' => $dataFavorites,
+                'links' => $links
+            ]
+        ];
+    }
+
+    public function getDataForFavoritesOrderByDateTimeDesc (Request $request) {
+        $pagination=5;
+        $favorites = json_decode($request->user()->favorites);
+
+        //Сортируем по времени
+        function sortAsc($data) {
+            
+            function isNotSorted($data) {
+                
+                for ($i=0;$i<count($data)-1;$i++) {
+                    if ($data[$i]->date_time<$data[$i+1]->date_time) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            while (isNotSorted($data)) {
+                for ($i=0;$i<count($data)-1;$i++) {
+                    if ($data[$i]->date_time<$data[$i+1]->date_time) {
+                        $temp = [
+                            'id'=>$data[$i]->id,
+                            'date_time'=>$data[$i]->date_time
+                        ];
+
+                        $data[$i]->id = $data[$i+1]->id;
+                        $data[$i]->date_time = $data[$i+1]->date_time;
+    
+                        $data[$i+1]->id = $temp['id'];
+                        $data[$i+1]->date_time =$temp['date_time'];
+                    }
+                }
+            }
+
+            return $data;
+        }
+        //END сортировка по времени восходящая
+
+        $favorites = sortAsc($favorites);
+        //Переводим дату в строку
+        for ($i=0;$i<count($favorites);$i++) {
+            $favorites[$i]->date_time = date("d.m.Y H.i.s",$favorites[$i]->date_time);
+        }
+
+        $count_of_paragraphs = count($favorites);
+
+        $count_of_pages = $count_of_paragraphs/$pagination + 1;
+
+        //Валидация текущей страницы
+        if ($request->page) {
+            $current_page = (int)$request->page;
+        } else {
+            $current_page = 1;
+        }
+
+        if ($current_page > $count_of_pages or $current_page<=0) {
+            $current_page = 1;
+        }
+
+        //Достаем параграфы текущей страницы
+        $current_paragraphs = [];
+
+        for ($i=0;$i<$pagination;$i++) {
+            $index = ($current_page-1)*$pagination+$i;
+            if ($index>count($favorites)-1) {
+                break;
+            }
+            $current_paragraphs[$i] = [
+                'id'=>$favorites[$index]->id,
+                'date_time'=>$favorites[$index]->date_time
+            ];
+        }
+
+        //Создаем ссылки для кнопок
+        $url = url()->current();
+        if ($current_page == 1) {
+            $previous_url = null;
+        } else {
+            $previous_page = $current_page -1;
+            $previous_url = $url.'?page='.$previous_page;
+        }
+
+        $links[0] = [
+            'url' => $previous_url,
+            'label' => '<',
+            'active' => false
+        ];
+
+        for ($i=1;$i<=$count_of_pages;$i++) {
+            $active = false;
+            if ($i == $current_page) {
+                $active = true;
+            }
+            $links[$i] = [
+                'url' => $url.'?page='.$i,
+                'label' => $i,
+                'active' => $active
+            ];
+        }
+
+        if ($current_page == $count_of_pages) {
+            $next_url = null;
+        } else {
+            $next_page = $current_page +1;
+            $next_url = $url.'?page='.$next_page;
+        }
+
+        array_push($links,[
+            'url' => $next_url,
+            'label' => '>',
+            'active' => false
+        ]);
+
+        //Достаем параграфы для текущей страницы из базы
+        $dataFavorites = [];
+        foreach ($current_paragraphs as $i => $paragraph) {
+            $dataFavorites[$i] = Paragraph::where('paragraphs.id',$paragraph['id'])
+                                ->join('themes','paragraphs.theme','=','themes.id')
+                                ->join('sections','themes.section','=','sections.id')
+                                ->select('paragraphs.id as id',
+                                        'paragraphs.sort as paragraph_sort',
+                                        'content',
+                                        'themes.sort as theme_sort',
+                                        'themes.name as theme_name',
+                                        'sections.sort as section_sort',
+                                        'sections.name as section_name',
+                                        'sections.image as section_image')
+                                ->first();
+            $dataFavorites[$i]->date_time = $paragraph['date_time'];
+        }
+
+        return [
+            "status" => 'success',
+            'favorites' => [
+                'data' => $dataFavorites,
+                'links' => $links
+            ]
         ];
     }
 }
