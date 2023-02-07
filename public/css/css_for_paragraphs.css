@@ -1,0 +1,224 @@
+.with_marker_star {
+    padding-left: 1.5rem;
+    position:relative;
+}
+.with_marker_star::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    width: 1rem;
+    height: 1rem;
+    background-image: url('/public/uploads/markers/star.png');
+    background-size: 1rem 1rem;
+    content: "";
+}
+
+.li_emoji_1, .li_emoji_2, .li_emoji_3, .li_emoji_4, .li_emoji_5, .li_emoji_6, .li_emoji_7, .li_emoji_8, .li_emoji_9, .li_emoji_10, .li_emoji_11, .li_emoji_12, .li_emoji_13, .li_emoji_14, .li_emoji_15, .li_emoji_16, .li_emoji_17, .li_emoji_18, .li_emoji_19, .li_emoji_20, .li_emoji_21, .li_emoji_22, .li_emoji_23, .li_emoji_24, .li_emoji_25, .li_emoji_26, .li_emoji_27, .li_emoji_28, .li_emoji_29, .li_emoji_30, .li_emoji_31, .li_emoji_32 {
+    padding-left: 1.5rem;
+    position:relative;
+}
+
+.li_emoji_1::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "❗️";
+}
+
+.li_emoji_2::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "⚠️";
+}
+
+.li_emoji_3::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "❌";
+}
+.li_emoji_4::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "🔸";
+}
+.li_emoji_5::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "🔹";
+}
+.li_emoji_6::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "🔶";
+}
+.li_emoji_7::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "🔷";
+}
+.li_emoji_8::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "➖";
+}
+.li_emoji_9::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "➕";
+}
+.li_emoji_10::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "☑️";
+}
+.li_emoji_11::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "✔️";
+}
+.li_emoji_12::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "✅";
+}
+.li_emoji_13::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "✖️";
+}
+.li_emoji_14::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "📌";
+}
+.li_emoji_15::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "⭐️";
+}
+.li_emoji_16::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "🌟";
+}
+.li_emoji_17::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "⚡️";
+}
+.li_emoji_18::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "🔅";
+}
+.li_emoji_19::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "🔆";
+}
+.li_emoji_20::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "❌";
+}
+.li_emoji_21::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "⭕️";
+}
+.li_emoji_22::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "➡️";
+}
+.li_emoji_23::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "🔺";
+}
+.li_emoji_24::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "🔻";
+}
+.li_emoji_25::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "🚩";
+}
+.li_emoji_26::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "▶️";
+}
+.li_emoji_27::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "⬇️";
+}
+.li_emoji_28::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "●";
+}
+.li_emoji_29::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "○";
+}
+.li_emoji_30::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "🔥";
+}
+.li_emoji_31::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "💥";
+}
+.li_emoji_32::before {
+    position:absolute;
+    top:0rem;
+    left:0rem;
+    content: "🌶";
+}
+
+details p {
+    padding-left: 1rem;
+}
+
+.paragraph-with-left-border {
+    border-left: solid black 2px;
+    background-color: #FBF3DB;
+    padding: 0.4rem 0.6rem 
+}

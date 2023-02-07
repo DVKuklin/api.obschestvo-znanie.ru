@@ -13,7 +13,7 @@ function getCookie(name) {
 }
 
 const baseURL = document.location.protocol + "//" + document.location.host + "/api/admin/";
-    
+
 let current_section = localStorage.getItem('paragraphs-edit-current_section');
 let current_theme = localStorage.getItem('paragraphs-edit-current_theme');
 
@@ -100,10 +100,33 @@ function dataBoot() {
           let tbody = crudTable.querySelector('tbody');
           tbody.innerHTML = s;
           
+          // ❗️⚠️❌🔸🔹🔶🔷➖➕☑️✔️✅✖️📌⭐️🌟⚡️🔅🔆❌⭕️➡️🔺🔻🚩▶️⬇️● ○🔥💥😄
+
+          let styles = [
+            {
+              name: 'Параграф с левой рамкой',
+              element: 'p',
+              classes: ['paragraph-with-left-border']
+            }
+          ];
+          for (let i=1;i<33;i++) {
+            styles.push({
+              name: 'Маркер '+i,
+              element: 'p',
+              classes: [ 'li_emoji_'+i ]
+            })
+          }
+
+
+
           //Подключаем editors
           for (let i=0;i<data.paragraphs.length;i++){
             ClassicEditor
-              .create( document.querySelector( `#editor${i}` ) )
+              .create( document.querySelector( `#editor${i}` ), {
+                style: {
+                  definitions: styles
+                }
+              } )
               .then( editor => {
                 // console.log( editor );
 
@@ -124,7 +147,8 @@ function dataBoot() {
           }
         },
       error: function (jqXHR, exception) {
-        console.log('Ошибка интернета.')
+        console.log('Ошибка интернета');
+
       }
     });
 }
