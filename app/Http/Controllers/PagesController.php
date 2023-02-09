@@ -402,7 +402,11 @@ class PagesController extends Controller
 
         $count_of_paragraphs = count($favorites);
 
-        $count_of_pages = $count_of_paragraphs/$pagination + 1;
+        $count_of_pages = $count_of_paragraphs/$pagination;
+
+        if ($count_of_paragraphs % $pagination > 0) {
+            $count_of_pages++;
+        }
 
         //Валидация текущей страницы
         if ($request->page) {
@@ -549,7 +553,11 @@ class PagesController extends Controller
 
         $count_of_paragraphs = count($favorites);
 
-        $count_of_pages = $count_of_paragraphs/$pagination + 1;
+        $count_of_pages = $count_of_paragraphs/$pagination;
+
+        if ($count_of_paragraphs % $pagination > 0) {
+            $count_of_pages++;
+        }
 
         //Валидация текущей страницы
         if ($request->page) {
