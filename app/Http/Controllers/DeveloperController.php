@@ -6,10 +6,31 @@ use Illuminate\Http\Request;
 use App\Models\Theme;
 use App\Models\Paragraph;
 use App\Models\User;
+use App\Models\Document;
 use Illuminate\Support\Facades\Hash;
 
 class DeveloperController extends Controller
 {
+    //Данная функция просто переносит из столбца text в столбец content
+    //Сравнивает название темы с названием темы в таблице themes
+    //Если совпадает, то вписывает id темы в столбец theme
+    public function changeParagraphsFromOldTableV01(Request $request) {
+        $paragraphs = Document::all();
+
+        foreach ($paragraphs as &$paragraph) {
+            $data = splitStr($paragraph->name);
+            $theme = Theme::where('name',$data['themeName'])->select('id')->first();
+            if ($theme) {
+                $paragraph->theme = $theme->id;
+                $paragraph->content = $paragraph->text;
+                $paragraph->save();
+            }
+        }
+
+        // $paragraphs->save();
+        return $paragraphs;
+    }
+
     //Данная функция из старой таблицы из HOSTCms взяля названия и сортирувку тем и перенесла в themes
     //А так же в paragraphs.theme поместила id тем
     //А так же извлекла из названия темы сортировку и само название.

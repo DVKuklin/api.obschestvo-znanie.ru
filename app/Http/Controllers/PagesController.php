@@ -245,10 +245,18 @@ class PagesController extends Controller
 
         try {
             $res = $user->save();
-            return [
-                'status'=>'success',
-                'message'=>$res
-            ];
+            if ($res) {
+                return [
+                    'status'=>'success'
+                ];
+            } else {
+                return [
+                    'status'=>'error',
+                    'message'=>'paragraph не удален',
+                    'res'=>$res
+                ];
+            }
+
         }catch(\Exception $e) {
             return ['status'=>'error',
                     'message'=>'BD error'];
