@@ -44,7 +44,7 @@
         </div> 
     </div>
 
-    <div class="crudTable-container">
+    <div class="crudTable-container conForThem">
       <table  id="crudTable"
               class="bg-white table table-striped table-hover nowrap rounded shadow-xs border-xs mt-2" cellspacing="0"
               style="max-width:800px">

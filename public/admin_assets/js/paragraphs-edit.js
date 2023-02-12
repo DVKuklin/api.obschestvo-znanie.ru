@@ -125,7 +125,11 @@ function dataBoot() {
               .create( document.querySelector( `#editor${i}` ), {
                 style: {
                   definitions: styles
-                }
+                },
+                // indentBlock: {
+                //   offset: 2.5,
+                //   unit: 'rem'
+                // }
               } )
               .then( editor => {
                 // console.log( editor );
