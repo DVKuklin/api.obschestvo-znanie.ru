@@ -108,16 +108,13 @@ function dataBoot() {
               classes: ['paragraph-with-left-border']
             }
           ];
-          for (let i=1;i<3;i++) {
+          for (let i=1;i<49;i++) {
             styles.push({
               name: 'Маркер '+i,
               element: 'p',
-              classes: [ 'with_marker_'+i ]
+              classes: [ 'with_marker','with_marker_'+i ]
             })
           }
-
-          console.log(styles);
-
 
           //Подключаем editors
           for (let i=0;i<data.paragraphs.length;i++){
@@ -157,8 +154,14 @@ function dataBoot() {
     });
 }
 
+document.addEventListener('keyup',function(event) {
+  if (event.code == 'KeyQ' && (event.ctrlKey || event.metaKey)) {
+    if (isDataChanged) saveParagraphs();
+  }
+})
+
 function saveParagraphs() {
-  if (!confirm("Поддтвердите сохранение изменений.")) return;
+
   let paragraphs = [];
 
   for (let i=0;i<editors.length;i++) {
@@ -180,7 +183,7 @@ function saveParagraphs() {
           if (data.status == "success") {
             btn_saveParagraphs.setAttribute('disabled','disabled');
             isDataChanged = false;
-            alert('Все изменения успешно сохранены.');
+            // alert('Все изменения успешно сохранены.');
           } else {
             alert('Что то пошло не так, изменения не сохранены.');
           }

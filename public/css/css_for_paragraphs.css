@@ -1,30 +1,3 @@
-.with_marker_1, .with_marker_2 {
-    padding-left: 2.5rem;
-    position:relative;
-}
-.with_marker_1::before {
-    position:absolute;
-    top:0px;
-    left:1.2rem;
-    width: 1rem;
-    height: 1rem;
-    background-image: url('../public/uploads/markers/fire-mark.png');
-    background-size: 1rem 1rem;
-    content: "";
-}
-
-.with_marker_2::before {
-    position:absolute;
-    top:0px;
-    left:1.2rem;
-    width: 1rem;
-    height: 1rem;
-    background-image: url('../public/uploads/markers/exclamation-mark.png');
-    background-size: 1rem 1rem;
-    content: "";
-}
-
-
 
 .conForThem details p {
     padding-left: 0.7rem !important;
@@ -85,3 +58,164 @@
 }
 
 /* END Настройка кнопки внутри details */
+
+
+/* Далее идут стили для p с маркерами */
+.with_marker {
+    padding-left: 2.5rem;
+    position:relative;
+}
+.with_marker::before {
+    position:absolute;
+    top:0.18rem;
+    left:1.2rem;
+    width: 1rem;
+    height: 1rem;
+    background-size: 1rem 1rem;
+    content: "";
+}
+
+.with_marker_1::before {
+    background-image: url('../public/uploads/markers/marker_1.png');
+}
+.with_marker_2::before {
+    background-image: url('../public/uploads/markers/marker_2.png');
+}
+.with_marker_3::before {
+    background-image: url('../public/uploads/markers/marker_3.png');
+}
+.with_marker_4::before {
+    background-image: url('../public/uploads/markers/marker_4.png');
+}
+.with_marker_5::before {
+    background-image: url('../public/uploads/markers/marker_5.png');
+}
+.with_marker_6::before {
+    background-image: url('../public/uploads/markers/marker_6.png');
+}
+.with_marker_7::before {
+    background-image: url('../public/uploads/markers/marker_7.png');
+}
+.with_marker_8::before {
+    background-image: url('../public/uploads/markers/marker_8.png');
+}
+.with_marker_9::before {
+    background-image: url('../public/uploads/markers/marker_9.png');
+}
+.with_marker_10::before {
+    background-image: url('../public/uploads/markers/marker_10.png');
+}
+.with_marker_11::before {
+    background-image: url('../public/uploads/markers/marker_11.png');
+}
+.with_marker_12::before {
+    background-image: url('../public/uploads/markers/marker_12.png');
+}
+.with_marker_13::before {
+    background-image: url('../public/uploads/markers/marker_13.png');
+}
+.with_marker_14::before {
+    background-image: url('../public/uploads/markers/marker_14.png');
+}
+.with_marker_15::before {
+    background-image: url('../public/uploads/markers/marker_15.png');
+}
+.with_marker_16::before {
+    background-image: url('../public/uploads/markers/marker_16.png');
+}
+.with_marker_17::before {
+    background-image: url('../public/uploads/markers/marker_17.png');
+}
+.with_marker_18::before {
+    background-image: url('../public/uploads/markers/marker_18.png');
+}
+.with_marker_19::before {
+    background-image: url('../public/uploads/markers/marker_19.png');
+}
+.with_marker_20::before {
+    background-image: url('../public/uploads/markers/marker_20.png');
+}
+.with_marker_21::before {
+    background-image: url('../public/uploads/markers/marker_21.png');
+}
+.with_marker_22::before {
+    background-image: url('../public/uploads/markers/marker_22.png');
+}
+.with_marker_23::before {
+    background-image: url('../public/uploads/markers/marker_23.png');
+}
+.with_marker_24::before {
+    background-image: url('../public/uploads/markers/marker_24.png');
+}
+.with_marker_25::before {
+    background-image: url('../public/uploads/markers/marker_25.png');
+}
+.with_marker_26::before {
+    background-image: url('../public/uploads/markers/marker_26.png');
+}
+.with_marker_27::before {
+    background-image: url('../public/uploads/markers/marker_27.png');
+}
+.with_marker_28::before {
+    background-image: url('../public/uploads/markers/marker_28.png');
+}
+.with_marker_29::before {
+    background-image: url('../public/uploads/markers/marker_29.png');
+}
+.with_marker_30::before {
+    background-image: url('../public/uploads/markers/marker_30.png');
+}
+.with_marker_31::before {
+    background-image: url('../public/uploads/markers/marker_31.png');
+}
+.with_marker_32::before {
+    background-image: url('../public/uploads/markers/marker_32.png');
+}
+.with_marker_33::before {
+    background-image: url('../public/uploads/markers/marker_33.png');
+}
+.with_marker_34::before {
+    background-image: url('../public/uploads/markers/marker_34.png');
+}
+.with_marker_35::before {
+    background-image: url('../public/uploads/markers/marker_35.png');
+}
+.with_marker_36::before {
+    background-image: url('../public/uploads/markers/marker_36.png');
+}
+.with_marker_37::before {
+    background-image: url('../public/uploads/markers/marker_37.png');
+}
+.with_marker_38::before {
+    background-image: url('../public/uploads/markers/marker_38.png');
+}
+.with_marker_39::before {
+    background-image: url('../public/uploads/markers/marker_39.png');
+}
+.with_marker_40::before {
+    background-image: url('../public/uploads/markers/marker_40.png');
+}
+.with_marker_41::before {
+    background-image: url('../public/uploads/markers/marker_41.png');
+}
+.with_marker_42::before {
+    background-image: url('../public/uploads/markers/marker_42.png');
+}
+.with_marker_43::before {
+    background-image: url('../public/uploads/markers/marker_43.png');
+}
+.with_marker_44::before {
+    background-image: url('../public/uploads/markers/marker_44.png');
+}
+.with_marker_45::before {
+    background-image: url('../public/uploads/markers/marker_45.png');
+}
+.with_marker_46::before {
+    background-image: url('../public/uploads/markers/marker_46.png');
+}
+.with_marker_47::before {
+    background-image: url('../public/uploads/markers/marker_47.png');
+}
+.with_marker_48::before {
+    background-image: url('../public/uploads/markers/marker_48.png');
+}
