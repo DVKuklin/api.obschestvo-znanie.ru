@@ -100,7 +100,6 @@ function dataBoot() {
           let tbody = crudTable.querySelector('tbody');
           tbody.innerHTML = s;
           
-          // ⏵❗️⚠️❌🔸🔹🔶🔷➖➕☑️✔️✅✖️📌⭐️🌟⚡️🔅🔆❌⭕️➡️🔺🔻🚩▶️⬇️● ○🔥💥😄
 
           let styles = [
             {
@@ -109,14 +108,15 @@ function dataBoot() {
               classes: ['paragraph-with-left-border']
             }
           ];
-          for (let i=1;i<33;i++) {
+          for (let i=1;i<3;i++) {
             styles.push({
               name: 'Маркер '+i,
               element: 'p',
-              classes: [ 'li_emoji_'+i ]
+              classes: [ 'with_marker_'+i ]
             })
           }
 
+          console.log(styles);
 
 
           //Подключаем editors
@@ -126,10 +126,10 @@ function dataBoot() {
                 style: {
                   definitions: styles
                 },
-                // indentBlock: {
-                //   offset: 2.5,
-                //   unit: 'rem'
-                // }
+                indentBlock: {
+                  offset: 2.5,
+                  unit: 'rem'
+                }
               } )
               .then( editor => {
                 // console.log( editor );
