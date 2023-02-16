@@ -108,6 +108,11 @@ function dataBoot() {
               classes: ['paragraph-with-left-border']
             },
             {
+              name: 'Без отступа',
+              element: 'p',
+              classes: ['with-out-indent']
+            },
+            {
               name: 'png - emoji',
               element: 'span',
               classes: ['img-emoji']

@@ -60,10 +60,14 @@
 .img-emoji img{
     width:1rem;
     height:1rem;
-    transform: translateY(4px);
+    transform: translateY(0.23rem);
 }
 
 /* END Настройка кнопки внутри details */
+
+.conForThem .with-out-indent {
+    padding-left: 1.25rem;
+}
 
 
 /* Далее идут стили для p с маркерами */
@@ -73,7 +77,7 @@
 }
 .with_marker::before {
     position:absolute;
-    top:0.18rem;
+    top:0.25rem;
     left:1.2rem;
     width: 1rem;
     height: 1rem;
