@@ -106,6 +106,11 @@ function dataBoot() {
               name: 'Параграф с левой рамкой',
               element: 'p',
               classes: ['paragraph-with-left-border']
+            },
+            {
+              name: 'png - emoji',
+              element: 'span',
+              classes: ['img-emoji']
             }
           ];
           for (let i=1;i<49;i++) {

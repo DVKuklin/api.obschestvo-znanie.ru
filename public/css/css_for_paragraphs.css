@@ -57,6 +57,12 @@
     
 }
 
+.img-emoji img{
+    width:1rem;
+    height:1rem;
+    transform: translateY(4px);
+}
+
 /* END Настройка кнопки внутри details */
 
 
