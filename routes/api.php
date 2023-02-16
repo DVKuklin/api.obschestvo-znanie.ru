@@ -61,6 +61,7 @@ Route::controller(UserController::class)->group(function() {
 //     Route::post('test_get_token','getToken');
 //     Route::get('test_get_me','getMe')->middleware('auth:sanctum');
 //     Route::post('split_paragraphs','splitParagraphs');
+//     Route::post('change_paragraps_from_old_table_v_01','changeParagraphsFromOldTableV01');
 // });
 
 Route::middleware('checkIfAdmin')->controller(AdminApiController::class)->group(function() {

@@ -245,10 +245,18 @@ class PagesController extends Controller
 
         try {
             $res = $user->save();
-            return [
-                'status'=>'success',
-                'message'=>$res
-            ];
+            if ($res) {
+                return [
+                    'status'=>'success'
+                ];
+            } else {
+                return [
+                    'status'=>'error',
+                    'message'=>'paragraph не удален',
+                    'res'=>$res
+                ];
+            }
+
         }catch(\Exception $e) {
             return ['status'=>'error',
                     'message'=>'BD error'];
@@ -353,6 +361,13 @@ class PagesController extends Controller
         $pagination=5;
         $favorites = json_decode($request->user()->favorites);
 
+        if ($favorites == null) {
+            return [
+                'status' => 'noData',
+                'message' => 'В избранном пока ничего нет'
+            ];
+        }
+
         //Сортируем по времени
         function sortAsc($data) {
             
@@ -395,7 +410,11 @@ class PagesController extends Controller
 
         $count_of_paragraphs = count($favorites);
 
-        $count_of_pages = $count_of_paragraphs/$pagination + 1;
+        $count_of_pages = $count_of_paragraphs/$pagination;
+
+        if ($count_of_paragraphs % $pagination > 0) {
+            $count_of_pages++;
+        }
 
         //Валидация текущей страницы
         if ($request->page) {
@@ -477,7 +496,7 @@ class PagesController extends Controller
                                         'sections.name as section_name',
                                         'sections.image as section_image')
                                 ->first();
-            $dataFavorites[$i]->date_time = $paragraph['date_time'];
+            $dataFavorites[$i]['date_time'] = $paragraph['date_time'];
         }
 
         return [
@@ -493,6 +512,13 @@ class PagesController extends Controller
         $pagination=5;
         $favorites = json_decode($request->user()->favorites);
 
+        if ($favorites == null) {
+            return [
+                'status' => 'noData',
+                'message' => 'В избранном пока ничего нет'
+            ];
+        }
+
         //Сортируем по времени
         function sortAsc($data) {
             
@@ -535,7 +561,11 @@ class PagesController extends Controller
 
         $count_of_paragraphs = count($favorites);
 
-        $count_of_pages = $count_of_paragraphs/$pagination + 1;
+        $count_of_pages = $count_of_paragraphs/$pagination;
+
+        if ($count_of_paragraphs % $pagination > 0) {
+            $count_of_pages++;
+        }
 
         //Валидация текущей страницы
         if ($request->page) {
@@ -617,7 +647,9 @@ class PagesController extends Controller
                                         'sections.name as section_name',
                                         'sections.image as section_image')
                                 ->first();
-            $dataFavorites[$i]->date_time = $paragraph['date_time'];
+            // return var_dump($dataFavorites[$i]);
+
+            $dataFavorites[$i]['date_time'] = $paragraph['date_time'];
         }
 
         return [
@@ -625,7 +657,8 @@ class PagesController extends Controller
             'favorites' => [
                 'data' => $dataFavorites,
                 'links' => $links
-            ]
+            ],
+            'count' => count($dataFavorites)
         ];
     }
 }

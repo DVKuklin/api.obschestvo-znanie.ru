@@ -20,4 +20,6 @@ class Paragraph extends Model
         return $this->belongsTo('App\Models\Theme','theme','id');
     }
 
+    protected $table = 'paragraphs';
+
 }

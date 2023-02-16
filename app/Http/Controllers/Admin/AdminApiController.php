@@ -473,7 +473,8 @@ class AdminApiController extends Controller
             ];
         }catch(\Exception $e) {
             return [
-                'status'=>'exception'
+                'status'=>'exception',
+                'message' =>$e  
             ];
         }
     }

@@ -13,7 +13,7 @@ function getCookie(name) {
 }
 
 const baseURL = document.location.protocol + "//" + document.location.host + "/api/admin/";
-    
+
 let current_section = localStorage.getItem('paragraphs-edit-current_section');
 let current_theme = localStorage.getItem('paragraphs-edit-current_theme');
 
@@ -100,10 +100,39 @@ function dataBoot() {
           let tbody = crudTable.querySelector('tbody');
           tbody.innerHTML = s;
           
+
+          let styles = [
+            {
+              name: 'Параграф с левой рамкой',
+              element: 'p',
+              classes: ['paragraph-with-left-border']
+            },
+            {
+              name: 'png - emoji',
+              element: 'span',
+              classes: ['img-emoji']
+            }
+          ];
+          for (let i=1;i<49;i++) {
+            styles.push({
+              name: 'Маркер '+i,
+              element: 'p',
+              classes: [ 'with_marker','with_marker_'+i ]
+            })
+          }
+
           //Подключаем editors
           for (let i=0;i<data.paragraphs.length;i++){
             ClassicEditor
-              .create( document.querySelector( `#editor${i}` ) )
+              .create( document.querySelector( `#editor${i}` ), {
+                style: {
+                  definitions: styles
+                },
+                indentBlock: {
+                  offset: 2.5,
+                  unit: 'rem'
+                }
+              } )
               .then( editor => {
                 // console.log( editor );
 
@@ -124,13 +153,19 @@ function dataBoot() {
           }
         },
       error: function (jqXHR, exception) {
-        console.log('Ошибка интернета.')
+        console.log('Ошибка интернета');
+
       }
     });
 }
 
+document.addEventListener('keyup',function(event) {
+  if (event.code == 'KeyQ' && (event.ctrlKey || event.metaKey)) {
+    if (isDataChanged) saveParagraphs();
+  }
+})
+
 function saveParagraphs() {
-  if (!confirm("Поддтвердите сохранение изменений.")) return;
 
   let paragraphs = [];
 
@@ -153,7 +188,7 @@ function saveParagraphs() {
           if (data.status == "success") {
             btn_saveParagraphs.setAttribute('disabled','disabled');
             isDataChanged = false;
-            alert('Все изменения успешно сохранены.');
+            // alert('Все изменения успешно сохранены.');
           } else {
             alert('Что то пошло не так, изменения не сохранены.');
           }

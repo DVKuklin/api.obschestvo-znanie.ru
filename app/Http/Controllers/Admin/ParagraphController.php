@@ -27,5 +27,6 @@ class ParagraphController extends CrudController
         $this->crud->setListView('custom_admin.paragraphs-edit');
 
         Widget::add()->type('style')->content('admin_assets/css/paragraphs-edit.css');
+        Widget::add()->type('style')->content('css/css_for_paragraphs.css');
      }
 }

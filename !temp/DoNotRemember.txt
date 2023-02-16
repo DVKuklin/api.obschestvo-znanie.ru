@@ -1,4 +1,0 @@
-        //Не забыть после постмана
-        // Включить santum в kernel.php
-        // в routes/api.php подключить middleware
-        //Перекинуть js код в js файл
