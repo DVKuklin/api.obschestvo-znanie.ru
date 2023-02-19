@@ -72,7 +72,7 @@ function dataBoot() {
                 s += `<tr>  
                         <td>${data.paragraphs[i].sort}</td>`+
                         // <td class = "how-on-page">${data.paragraphs[i].content}</td>
-                        `<td class = "in-editor"><div id="editor${i}">${data.paragraphs[i].content}</div></td>
+                        `<td class = "in-editor" style="line-height:1.3rem;"><div id="editor${i}">${data.paragraphs[i].content}</div></td>
                         <td class="td-with-buttons">
                           <div class="button-container">
                             <button  class="btn btn-primary my-1" 
@@ -103,6 +103,16 @@ function dataBoot() {
 
           let styles = [
             {
+              name:'С маркером',
+              element:'p',
+              classes: ['with_marker']
+            },
+            {
+              name:'Маркер',
+              element: 'span',
+              classes: ['marker']
+            },
+            {
               name: 'Параграф с левой рамкой',
               element: 'p',
               classes: ['paragraph-with-left-border']
@@ -118,13 +128,6 @@ function dataBoot() {
               classes: ['img-emoji']
             }
           ];
-          for (let i=1;i<49;i++) {
-            styles.push({
-              name: 'Маркер '+i,
-              element: 'p',
-              classes: [ 'with_marker','with_marker_'+i ]
-            })
-          }
 
           //Подключаем editors
           for (let i=0;i<data.paragraphs.length;i++){
